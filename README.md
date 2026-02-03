@@ -192,4 +192,4 @@ Front abre em:
 ---
 
 ## 👤 Autor
-**Diego Vieira Torres**
+**Diego Vieira Torres e João Emanuel**
