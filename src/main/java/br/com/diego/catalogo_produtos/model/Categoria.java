@@ -1,18 +1,20 @@
-package br.com.diego.catalogo_produtos.domain;
+package br.com.diego.catalogo_produtos.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
 @Table(name = "categoria")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
 public class Categoria {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false, unique = true, length = 120)
-    private String nome;
+  @Column(nullable = false, unique = true, length = 120)
+  private String nome;
+
+  public Long getId() { return id; }
+
+  public String getNome() { return nome; }
+  public void setNome(String nome) { this.nome = nome; }
 }
