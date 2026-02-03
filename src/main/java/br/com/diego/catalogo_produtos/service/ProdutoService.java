@@ -31,6 +31,7 @@ public class ProdutoService {
     this.categoriaRepository = categoriaRepository;
   }
 
+  // CREATE
   @Transactional
   public ProdutoResponse criar(ProdutoCreateRequest req) {
     Marca marca = marcaRepository.findById(req.getMarcaId())
@@ -51,17 +52,52 @@ public class ProdutoService {
     return toResponse(salvo);
   }
 
+  // UPDATE (PUT)
   @Transactional
-  public ProdutoResponse detalheIncrementandoViews(Long id) {
+  public ProdutoResponse atualizar(Long id, ProdutoCreateRequest req) {
     Produto produto = produtoRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
 
+    Marca marca = marcaRepository.findById(req.getMarcaId())
+        .orElseThrow(() -> new NotFoundException("Marca não encontrada"));
+
+    Categoria categoria = categoriaRepository.findById(req.getCategoriaId())
+        .orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
+
+    produto.setNome(req.getNome());
+    produto.setDescricao(req.getDescricao());
+    produto.setPreco(req.getPreco());
+    produto.setEstoque(req.getEstoque());
+    produto.setMarca(marca);
+    produto.setCategoria(categoria);
+
+    Produto salvo = produtoRepository.save(produto);
+    return toResponse(salvo);
+  }
+
+  // DELETE
+  @Transactional
+  public void deletar(Long id) {
+    if (!produtoRepository.existsById(id)) {
+      throw new NotFoundException("Produto não encontrado");
+    }
+    produtoRepository.deleteById(id);
+  }
+
+  // DETALHE + VIEWS
+  @Transactional
+  public ProdutoResponse detalheIncrementandoViews(Long id) {
+    // 1) incrementa no banco
     produtoRepository.incrementViews(id);
-    produto.setViews(produto.getViews() + 1);
+
+    // 2) busca atualizado (garante retorno com valor correto)
+    Produto produto = produtoRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
 
     return toResponse(produto);
   }
 
+  // LISTAR + BUSCAR
   @Transactional(readOnly = true)
   public List<ProdutoResponse> listarBuscar(
       String q,

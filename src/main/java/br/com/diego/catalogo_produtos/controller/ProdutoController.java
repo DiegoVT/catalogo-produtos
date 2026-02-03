@@ -4,6 +4,7 @@ import br.com.diego.catalogo_produtos.dto.produto.ProdutoCreateRequest;
 import br.com.diego.catalogo_produtos.dto.produto.ProdutoResponse;
 import br.com.diego.catalogo_produtos.service.ProdutoService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,7 +41,21 @@ public class ProdutoController {
 
   // CADASTRO
   @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
   public ProdutoResponse criar(@RequestBody @Valid ProdutoCreateRequest request) {
     return produtoService.criar(request);
+  }
+
+  // ATUALIZAR (PUT)
+  @PutMapping("/{id}")
+  public ProdutoResponse atualizar(@PathVariable Long id, @RequestBody @Valid ProdutoCreateRequest request) {
+    return produtoService.atualizar(id, request);
+  }
+
+  // DELETAR (DELETE)
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deletar(@PathVariable Long id) {
+    produtoService.deletar(id);
   }
 }
